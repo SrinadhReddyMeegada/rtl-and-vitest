@@ -3,26 +3,26 @@ import TermsAndConditions from "../../src/components/TermsAndConditions";
 import userEvent from "@testing-library/user-event";
 
 describe("Terms and conditions", () => {
-  it("should render the content", () => {
+  const renderComponent = () => {
     render(<TermsAndConditions />);
-    const heading = screen.getByRole("heading");
+
+    return {
+      heading: screen.getByRole("heading"),
+      button: screen.getByRole("button"),
+      checkbox: screen.getByRole("checkbox"),
+    };
+  };
+  it("should render the content", () => {
+    const { heading, button, checkbox } = renderComponent();
+
     expect(heading).toHaveTextContent("Terms & Conditions");
-
-    const checkbox = screen.getByRole("checkbox");
-    expect(checkbox).toBeInTheDocument();
     expect(checkbox).not.toBeChecked();
-
-    const button = screen.getByRole("button", { name: /submit/i });
-    expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
   });
   it("should be render button when user clicks on checkbox", async () => {
-    render(<TermsAndConditions />);
-
-    const checkBox = screen.getByRole("checkbox");
+    const { checkbox } = renderComponent();
     const user = userEvent.setup();
-    screen.debug();
-    await user.click(checkBox);
-    expect(checkBox).toBeEnabled();
+    await user.click(checkbox);
+    expect(checkbox).toBeEnabled();
   });
 });
